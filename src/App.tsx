@@ -38,8 +38,9 @@ const App = () => {
     const isAlreadyAdded = selectedStack.some((item) => item.id === tech.id);
 
     if (isAlreadyAdded) {
+      // ✅ FIX: Using icon: false (or icon: <span>⚠️</span>) resolves TS2322
       toast.warn(`${tech.name} is already in your stack!`, {
-        icon: "",
+        icon: false,
       });
       return;
     }
@@ -80,14 +81,14 @@ const App = () => {
             Pick one technology per category to build your ideal stack.
           </p>
           {isLoading ? (
-            <div className=" flex flex-col items-center justify-center py-20">
+            <div className="flex flex-col items-center justify-center py-20">
               <div className="h-12 w-12 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
               <p className="mt-4 text-sm font-medium text-slate-600">
                 Loading Technologies...
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-4 py-10">
+            <div className="grid grid-cols-1 gap-8 py-10 lg:grid-cols-4">
               <div className="lg:col-span-3">
                 <TechnologyGrid
                   technologies={technologies}
