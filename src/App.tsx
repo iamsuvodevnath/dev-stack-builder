@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import TechnologyCard from "./components/TechnologyCard";
+import StackSidebar from "./components/StackSidebar";
+// import Footer from "./components/Footer";
 import type { Technology } from "./types/technology";
 
 function App() {
@@ -12,7 +14,7 @@ function App() {
   const [selectedStack, setSelectedStack] = useState<Technology[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-   useEffect(() => {
+  useEffect(() => {
     fetch("/technologies.json")
       .then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
@@ -28,7 +30,7 @@ function App() {
       });
   }, []);
 
-    const handleAddToStack = (tech: Technology) => {
+  const handleAddToStack = (tech: Technology) => {
     const isAlreadyAdded = selectedStack.some((item) => item.id === tech.id);
     if (isAlreadyAdded) {
       toast.warning(`${tech.name} is already in your stack!`);
@@ -37,7 +39,15 @@ function App() {
     setSelectedStack([...selectedStack, tech]);
     toast.success(`Added ${tech.name} to your stack!`);
   };
+  const handleRemoveFromStack = (id: string) => {
+    setSelectedStack(selectedStack.filter((item) => item.id !== id));
+    toast.info("Item removed from stack.");
+  };
 
+  const handleRemoveAll = () => {
+    setSelectedStack([]);
+    toast.error("Removed all items from stack.");
+  };
 
   return (
     <div className="min-h-screen bg-slate-50/50">
@@ -68,8 +78,13 @@ function App() {
                 />
               ))}
             </div>
-
-
+            <div className="lg:col-span-1">
+              <StackSidebar
+                stack={selectedStack}
+                onRemove={handleRemoveFromStack}
+                onRemoveAll={handleRemoveAll}
+              />
+            </div>
           </div>
         )}
       </main>
