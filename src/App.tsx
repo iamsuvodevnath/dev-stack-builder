@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import TechnologyCard from "./components/TechnologyCard";
 import StackSidebar from "./components/StackSidebar";
-// import Footer from "./components/Footer";
+import Footer from "./components/Footer";
 import type { Technology } from "./types/technology";
 
 function App() {
@@ -39,6 +39,7 @@ function App() {
     setSelectedStack([...selectedStack, tech]);
     toast.success(`Added ${tech.name} to your stack!`);
   };
+
   const handleRemoveFromStack = (id: string) => {
     setSelectedStack(selectedStack.filter((item) => item.id !== id));
     toast.info("Item removed from stack.");
@@ -51,6 +52,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50/50">
+      <ToastContainer position="top-right" autoClose={2000} />
       <Navbar />
       <Hero />
 
@@ -78,6 +80,7 @@ function App() {
                 />
               ))}
             </div>
+
             <div className="lg:col-span-1">
               <StackSidebar
                 stack={selectedStack}
@@ -88,6 +91,8 @@ function App() {
           </div>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 }
