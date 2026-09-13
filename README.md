@@ -12,9 +12,11 @@ Dev Stack Builder is a dynamic, modern web application designed for developers t
 
 ## Key Features
 
-1. **Interactive Tech Selection & Real-Time Sidebar:** Browse through curated technologies and instantly add or remove items to build your stack with immediate duplicate detection and state feedback.
-2. **Category Filtering & Search:** Search technologies by keyword or filter by domain (Frontend, Backend, Database, DevOps, Tools, Styling, Language).
-3. **Interactive Notifications & Responsive Layout:** Clean feedback via `react-toastify` alerts on user actions alongside full responsiveness across desktop, tablet, and mobile displays.
+## Key Features
+
+1. **Interactive Tech Selection & Real-Time Sidebar:** Browse through curated technologies and instantly add or remove items to build your custom stack with dynamic counter tracking and empty state handling.
+2. **Duplicate Detection & Toast Feedback:** Interactive feedback powered by `react-toastify` that alerts users upon adding, attempting duplicate additions, removing single items, or clearing the entire stack.
+3. **Responsive Navigation & Mobile Drawer:** Modern top navigation bar featuring a branded gradient, sticky positioning on scroll, and a mobile hamburger menu dropdown for seamless browsing across all screen sizes.
 
 ---
 
