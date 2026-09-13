@@ -39,7 +39,7 @@ const App = () => {
 
     if (isAlreadyAdded) {
       toast.warn(`${tech.name} is already in your stack!`, {
-        icon: "⚠️",
+        icon: "",
       });
       return;
     }
