@@ -4,97 +4,112 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import TechnologyCard from "./components/TechnologyCard";
+import TechnologyGrid from "./components/TechnologyGrid";
 import StackSidebar from "./components/StackSidebar";
 import Footer from "./components/Footer";
 import type { Technology } from "./types/technology";
 
-function App() {
+const App = () => {
   const [technologies, setTechnologies] = useState<Technology[]>([]);
   const [selectedStack, setSelectedStack] = useState<Technology[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch("/technologies.json")
       .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok");
+        if (!res.ok) {
+          throw new Error("Failed to fetch technologies data.");
+        }
         return res.json();
       })
       .then((data: Technology[]) => {
         setTechnologies(data);
-        setLoading(false);
+        setIsLoading(false);
       })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-        setLoading(false);
+      .catch((err) => {
+        console.error("Error loading technologies:", err);
+        toast.error("Failed to load technologies data.");
+        setIsLoading(false);
       });
   }, []);
 
-  const handleAddToStack = (tech: Technology) => {
+  const handleAddTech = (tech: Technology) => {
     const isAlreadyAdded = selectedStack.some((item) => item.id === tech.id);
+
     if (isAlreadyAdded) {
-      toast.warning(`${tech.name} is already in your stack!`);
+      toast.warn(`${tech.name} is already in your stack!`, {
+        icon: "⚠️",
+      });
       return;
     }
-    setSelectedStack([...selectedStack, tech]);
+
+    setSelectedStack((prev) => [...prev, tech]);
     toast.success(`Added ${tech.name} to your stack!`);
   };
 
-  const handleRemoveFromStack = (id: string) => {
-    setSelectedStack(selectedStack.filter((item) => item.id !== id));
-    toast.info("Item removed from stack.");
+  const handleRemoveTech = (id: string) => {
+    const techToRemove = selectedStack.find((item) => item.id === id);
+    setSelectedStack((prev) => prev.filter((item) => item.id !== id));
+    if (techToRemove) {
+      toast.info(`Removed ${techToRemove.name} from your stack.`);
+    }
   };
 
   const handleRemoveAll = () => {
+    if (selectedStack.length === 0) return;
     setSelectedStack([]);
-    toast.error("Removed all items from stack.");
+    toast.error("Cleared all technologies from your stack.");
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
-      <ToastContainer position="top-right" autoClose={2000} />
-      <Navbar />
-      <Hero />
+    <div className="flex min-h-screen flex-col justify-between bg-slate-50 font-sans text-slate-900">
+      <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+      <div>
+        <Navbar />
+        <Hero />
 
-      <main className="mx-auto max-w-7xl px-6 py-12">
-        <h2 className="text-3xl font-bold text-slate-900">
-          Explore the <span className="text-pink-500">Technologies</span>
-        </h2>
-        <p className="mt-1 text-sm text-slate-500">
-          Pick one technology per category to build your ideal stack.
-        </p>
-
-        {loading ? (
-          <div className="py-20 text-center text-lg font-semibold text-slate-600">
-            Loading technologies...
-          </div>
-        ) : (
-          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-4">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:col-span-3 lg:grid-cols-3">
-              {technologies.map((tech) => (
-                <TechnologyCard
-                  key={tech.id}
-                  tech={tech}
-                  onAdd={handleAddToStack}
-                  isAdded={selectedStack.some((item) => item.id === tech.id)}
+        <main className="mx-auto max-w-7xl px-6 py-8">
+          <h2 className="text-3xl font-bold text-slate-900">
+            Explore the{" "}
+            <span className="bg-[linear-gradient(135deg,#22d3ee,#2563eb,#4f46e5,#7c3aed)] bg-clip-text text-transparent">
+              Technologies
+            </span>
+          </h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Pick one technology per category to build your ideal stack.
+          </p>
+          {isLoading ? (
+            <div className=" flex flex-col items-center justify-center py-20">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
+              <p className="mt-4 text-sm font-medium text-slate-600">
+                Loading Technologies...
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-4 py-10">
+              <div className="lg:col-span-3">
+                <TechnologyGrid
+                  technologies={technologies}
+                  selectedStack={selectedStack}
+                  onAdd={handleAddTech}
                 />
-              ))}
+              </div>
+              <div className="lg:col-span-1">
+                <StackSidebar
+                  stack={selectedStack}
+                  onRemove={handleRemoveTech}
+                  onRemoveAll={handleRemoveAll}
+                />
+              </div>
             </div>
-
-            <div className="lg:col-span-1">
-              <StackSidebar
-                stack={selectedStack}
-                onRemove={handleRemoveFromStack}
-                onRemoveAll={handleRemoveAll}
-              />
-            </div>
-          </div>
-        )}
-      </main>
+          )}
+        </main>
+      </div>
 
       <Footer />
     </div>
   );
-}
+};
 
 export default App;

@@ -11,7 +11,7 @@ const TechnologyCard: React.FC<Props> = ({ tech, onAdd, isAdded }) => {
   return (
     <div className="flex flex-col justify-between rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-all hover:shadow-md">
       <div>
-        {/* Top bar: Icon & Badge */}
+        {/*Icon & Badge */}
         <div className="flex items-center justify-between">
           <img src={tech.icon} alt={tech.name} className="h-10 w-10 object-contain" />
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
@@ -34,13 +34,12 @@ const TechnologyCard: React.FC<Props> = ({ tech, onAdd, isAdded }) => {
           </span>
         </div>
 
-        {/* Add Button */}
+        {/* Add Button - Notice `disabled` is removed so click events fire */}
         <button
           onClick={() => onAdd(tech)}
-          disabled={isAdded}
-          className={`mt-4 w-full rounded-lg py-2.5 text-sm font-semibold transition-colors ${
+          className={`mt-4 w-full rounded-lg py-2.5 text-sm font-semibold transition-colors cursor-pointer ${
             isAdded
-              ? "cursor-not-allowed bg-slate-100 text-slate-400"
+              ? "bg-slate-100 text-slate-400 hover:bg-slate-200"
               : "bg-slate-900 text-white hover:bg-slate-800"
           }`}
         >
